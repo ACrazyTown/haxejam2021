@@ -19,15 +19,16 @@ class Collider extends FlxSprite
 
     public function new(X:Float, Y:Float, width:Int, height:Int)
     {
-        x = _x = X;
-        y = _y = Y;
+		super(X, Y);
+
+        _x = X;
+        _y = Y;
         _width = width;
         _height = height;
-
         immovable = true;
 
-        super(x, y);
 		loadGraphic("assets/images/collider.png");
+        trace("s?");
 
         updatePosition(_width, _height);
     }

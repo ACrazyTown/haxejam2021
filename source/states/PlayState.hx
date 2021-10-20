@@ -1,5 +1,6 @@
 package states;
 
+import props.NPC;
 import props.Collider;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import utils.Paths;
@@ -18,15 +19,23 @@ class PlayState extends FlxState
 
 	override public function create()
 	{
+		super.create();
+
 		colliderGroup = new FlxTypedGroup<Collider>();
-		add(colliderGroup);
+		player = new Player(250, 250);
 
 		generateRoom(0);
 
-		player = new Player(250, 250);
+		add(colliderGroup);
 		add(player);
 
-		super.create();
+		var npctest:NPC = new NPC(250, 150, true);
+		npctest.screenCenter();
+		//npctest.updatePositions();
+		//trace(npctest.x);
+		add(npctest);
+
+		FlxG.debugger.drawDebug = true;
 	}
 
 	override public function update(elapsed:Float)
@@ -37,6 +46,7 @@ class PlayState extends FlxState
 
 	function collisionCheck()
 	{
+		/*
 		for (collider in shitShow)
 		{
 			if (FlxG.collide(player, collider))
@@ -45,6 +55,7 @@ class PlayState extends FlxState
 				trace("COLLISION!!!");
 			}
 		}
+		*/
 
 		if (FlxG.collide(player, colliderGroup))
 		{
@@ -66,7 +77,7 @@ class PlayState extends FlxState
 				var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image("levels/" + curLevel + "/bg"));
 				add(bg);
 
-				var bgCollider:Collider = new Collider(0, 185, FlxG.width, 24);
+				var bgCollider:Collider = new Collider(0, 175, FlxG.width, 24);
 				colliderGroup.add(bgCollider);
 				//add(bgCollider);
 				//shitShow.push(bgCollider);

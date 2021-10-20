@@ -5,8 +5,8 @@ import flixel.FlxSprite;
 
 class Player extends FlxSprite
 {
-    public var walkVelocity:Int = 250;
-    public var runVelocity:Int = 300;
+    public var walkVelocity:Int = 175;
+    public var runVelocity:Int = 225;
 
     var currentVelocity:Int = 0;
 
@@ -15,7 +15,7 @@ class Player extends FlxSprite
         x = X;
         y = Y;
 
-        immovable = true;
+        //immovable = true;
 
         super(X, Y);
         loadGraphic("assets/images/playr_placeholder.png");
