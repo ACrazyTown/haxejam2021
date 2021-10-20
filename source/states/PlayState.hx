@@ -45,6 +45,11 @@ class PlayState extends FlxState
 				trace("COLLISION!!!");
 			}
 		}
+
+		if (FlxG.collide(player, colliderGroup))
+		{
+			trace("colliseien???");
+		}
 	}
 
 	function generateRoom(curLevel:Int)
@@ -62,8 +67,9 @@ class PlayState extends FlxState
 				add(bg);
 
 				var bgCollider:Collider = new Collider(0, 185, FlxG.width, 24);
-				add(bgCollider);
-				shitShow.push(bgCollider);
+				colliderGroup.add(bgCollider);
+				//add(bgCollider);
+				//shitShow.push(bgCollider);
 
 				/*
 				var bgCollider:FlxSprite = new FlxSprite(0, 185).loadGraphic("assets/images/collider.png");

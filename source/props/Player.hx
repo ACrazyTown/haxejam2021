@@ -15,6 +15,8 @@ class Player extends FlxSprite
         x = X;
         y = Y;
 
+        immovable = true;
+
         super(X, Y);
         loadGraphic("assets/images/playr_placeholder.png");
     }
