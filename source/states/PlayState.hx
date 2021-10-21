@@ -1,5 +1,8 @@
 package states;
 
+import flixel.math.FlxRect;
+import flixel.FlxCamera;
+import flixel.math.FlxVelocity;
 import props.NPC;
 import props.Collider;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -9,58 +12,88 @@ import utils.GameInfo;
 import props.Player;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.math.FlxPoint;
 
 class PlayState extends FlxState
 {
 	public var shitShow:Array<Collider> = [];
 	public var colliderGroup:FlxTypedGroup<Collider>;
+	public var npcGroup:FlxTypedGroup<NPC>;
 
 	var player:Player;
+	//var npctest:NPC;
 
 	override public function create()
 	{
 		super.create();
 
+		/*
+		camGame = new FlxCamera();
+		camHUD = new FlxCamera();
+
+		FlxG.cameras.reset(camGame);
+		FlxG.cameras.add(camHUD);
+
+		//FlxCamera.defaultCameras = [camGame];
+		camGame.follow(player, FlxCameraFollowStyle.SCREEN_BY_SCREEN);
+
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
+		*/
+
+		//FlxG.camera.followLerp = 0.5;
+		//FlxG.camera.setScrollBounds();
+		//FlxG.worldBounds.set(0, 0, 0, 0);
+
 		colliderGroup = new FlxTypedGroup<Collider>();
-		player = new Player(250, 250);
+		npcGroup = new FlxTypedGroup<NPC>();
+		player = new Player(50, 150);
+
+		//FlxG.camera.zoom = 0.5;
+
+		//FlxG.camera.follow(player, FlxCameraFollowStyle.TOPDOWN, 0.5);
+		//FlxG.camera.deadzone.set(80, 80, FlxG.width - 160, FlxG.height - 160);
 
 		generateRoom(0);
 
 		add(colliderGroup);
 		add(player);
-
-		var npctest:NPC = new NPC(250, 150, true);
-		npctest.screenCenter();
-		//npctest.updatePositions();
-		//trace(npctest.x);
-		add(npctest);
+		add(npcGroup);
 
 		FlxG.debugger.drawDebug = true;
 	}
 
 	override public function update(elapsed:Float)
 	{
-		collisionCheck();
+		eventChecks();
+
+		//trace("distance between player and npc is: " + player.getMidpoint().distanceTo(npctest.getMidpoint()) + "????");
+
 		super.update(elapsed);
 	}
 
-	function collisionCheck()
+	function eventChecks()
 	{
-		/*
-		for (collider in shitShow)
-		{
-			if (FlxG.collide(player, collider))
-			{
-				//player.setPosition((collider.x - collider.width), (collider.y - collider.height));
-				trace("COLLISION!!!");
-			}
-		}
-		*/
-
 		if (FlxG.collide(player, colliderGroup))
 		{
 			trace("colliseien???");
 		}
+
+		npcGroup.forEachAlive(function(npc:NPC)
+		{
+			if (player.getMidpoint().distanceTo(npc.getMidpoint()) <= 325 && !npc.isChasing)
+			{
+				npc.isChasing = true;
+				trace("you are gonna die");
+			}
+
+			if (npc.isChasing)
+			{
+				//trace("BITCH");
+				//trace(npc.chaseRatio);
+				npc.chaseRatio += 0.00025;
+				npc.chase(player.x, player.y, npc.chaseRatio);
+			}
+		});
 	}
 
 	function generateRoom(curLevel:Int)
@@ -74,21 +107,17 @@ class PlayState extends FlxState
 		{
 			case 0:
 			{
+				//FlxG.camera.setScrollBounds(0, FlxG.width * 2, 0, FlxG.height);
+
 				var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image("levels/" + curLevel + "/bg"));
 				add(bg);
 
 				var bgCollider:Collider = new Collider(0, 175, FlxG.width, 24);
-				colliderGroup.add(bgCollider);
-				//add(bgCollider);
-				//shitShow.push(bgCollider);
 
-				/*
-				var bgCollider:FlxSprite = new FlxSprite(0, 185).loadGraphic("assets/images/collider.png");
-				bgCollider.setGraphicSize(FlxG.width, 24);
-				bgCollider.updateHitbox();
-				bgCollider.x = 0;
-				add(bgCollider);
-				*/
+				var npctest:NPC = new NPC(550, 150, true);
+				//npctest.setSize(npctest.character.width, npctest.rope.height);
+				//npctest.screenCenter();
+				npcGroup.add(npctest);
 			}
 		}
 	}
