@@ -1,5 +1,10 @@
 package states;
 
+import states.substates.Cutscene.FirstBattleCutscene;
+import states.substates.BattleSubstate;
+import flixel.FlxSubState;
+import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import flixel.math.FlxRect;
 import flixel.FlxCamera;
 import flixel.math.FlxVelocity;
@@ -59,7 +64,7 @@ class PlayState extends FlxState
 		add(player);
 		add(npcGroup);
 
-		FlxG.debugger.drawDebug = true;
+		//FlxG.debugger.drawDebug = true;
 	}
 
 	override public function update(elapsed:Float)
@@ -71,6 +76,8 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 
+	var npcTime:Float = 0;
+
 	function eventChecks()
 	{
 		if (FlxG.collide(player, colliderGroup))
@@ -80,10 +87,30 @@ class PlayState extends FlxState
 
 		npcGroup.forEachAlive(function(npc:NPC)
 		{
+			if (player.overlaps(npc))
+			{
+				trace("battle time");
+				openSubState(new BattleSubstate([player.x, player.y], [npc.x, npc.y]));
+			}
+
 			if (player.getMidpoint().distanceTo(npc.getMidpoint()) <= 325 && !npc.isChasing)
 			{
-				npc.isChasing = true;
-				trace("you are gonna die");
+				npc.sawPlayer = true;
+				//trace("you are gonna die");
+			}
+
+			if (npc.sawPlayer)
+			{
+				npc.alpha = 0.5;
+				npcTime += FlxG.elapsed;
+				trace(npcTime);
+				if (npcTime > 1.5)
+				{
+					trace("SPOTTED!");
+					//npc.color = FlxColor.RED;
+					npc.sawPlayer = false;
+					npc.isChasing = true;
+				}
 			}
 
 			if (npc.isChasing)
@@ -120,5 +147,10 @@ class PlayState extends FlxState
 				npcGroup.add(npctest);
 			}
 		}
+	}
+
+	override function openSubState(SubState:FlxSubState)
+	{
+		super.openSubState(SubState);
 	}
 }

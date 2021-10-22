@@ -23,6 +23,7 @@ class NPC extends FlxSpriteGroup
     public var character:FlxSprite;
     public var rope:Rope;
 
+    public var sawPlayer:Bool = false;
     public var isChasing:Bool = false;
 	public var chaseRatio:Float = 0;
 

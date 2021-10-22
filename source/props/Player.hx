@@ -10,6 +10,8 @@ class Player extends FlxSprite
 
     var currentVelocity:Int = 0;
 
+    public var disableMovement:Bool = false;
+
     public function new(X:Float, Y:Float)
     {
         x = X;
@@ -24,7 +26,8 @@ class Player extends FlxSprite
     override function update(elapsed:Float):Void
     {
         //trace("IM ALIVE!!!");
-        keyCheck();
+        if (!disableMovement)
+            keyCheck();
         super.update(elapsed);
     }
 
